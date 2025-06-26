@@ -1651,6 +1651,24 @@ paths:
                       message:
                         type: string
                         example: "Project 5 not found"
+        "409":
+          description: There are existing attendances for this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                        example: "There are existing attendances for this project."
 
     patch:
       security:
