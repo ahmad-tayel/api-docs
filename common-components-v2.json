@@ -10,7 +10,7 @@
       "url": "https://api.personio.de"
     }
   ],
-  "paths": null,
+  "paths": {},
   "components": {
     "responses": {
       "NotFoundResponse": {
@@ -33,10 +33,14 @@
           "links": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
-            },
+              "$ref": "#/components/schemas/LinkObject"
+          },
             "example": {
-              "self": "https://api.personio.de/v2/person?cursor=<current-cursor>"
+              "links": {
+                "self": {
+                  "href": "https://api.personio.de/v2/person?cursor=<current-cursor>"
+                }
+              }
             }
           }
         }
@@ -51,20 +55,7 @@
             "description": "The id of the created resource."
           },
           "_meta": {
-            "readOnly": true,
-            "type": "object",
-            "properties": {
-              "links": {
-                "type": "object",
-                "properties": {
-                  "self": {
-                    "type": "string",
-                    "format": "uri",
-                    "example": "https://api.personio.de/v2/persons/some-person-id"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/schemas/MetaObject"
           }
         }
       },
@@ -103,7 +94,7 @@
         "type": "object",
         "description": "This object represents an error response.",
         "properties": {
-          "trace_id": {
+          "personio_trace_id": {
             "type": "string",
             "example": "aswo3f-a202lfso-312123sld-1230ddd",
             "description": "A unique ID that was created for this error."
@@ -134,6 +125,12 @@
                   "format": "uri",
                   "example": "https://developer.personio.de/reference/errors#common.requested_resource_not_found",
                   "description": "A link to the developer hub where more information can be found for the encountered error."
+                },
+                "_meta": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -146,7 +143,6 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid",
             "description": "The unique identifier for this `custom_attribute`.",
             "readOnly": true
           },
@@ -179,7 +175,7 @@
         }
       },
       "CustomAttributeValue": {
-        "anyOf": [
+        "oneOf": [
           {
             "type": "string",
             "description": "An arbitrary value that can be represented as a string."
@@ -201,6 +197,18 @@
             }
           }
         ]
+      },
+      "LinkObject": {
+        "description": "This objects represents a hyperlink.",
+        "type": "object",
+        "readOnly": true,
+        "properties": {
+          "href": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": true
       }
     },
     "parameters": {
@@ -244,6 +252,73 @@
           "type": "string"
         },
         "description": "The pagination cursor to navigate over to the next list of resources. If you pass a specific limit to your  request, or you rely on the default value of the number of resources to be returned, then your subsequent call has to include the cursor in order to retrieve the next list of resources. If cursor is missing,  the first page is returned."
+      }
+    },
+    "examples": {
+      "ResourceNotFound": {
+        "value": {
+          "personio_trace_id": "aswo3f-a202lfso-312123sld-1230ddd",
+          "timestamp": "2021-05-28T11:17:30+00:00",
+          "errors": [
+            {
+              "title": "Resource not found",
+              "detail": "The requested resource was not found. The resource could have been deleted or never existed in our system.",
+              "type": "https://developer.personio.de/reference/errors#common.requested_resource_not_found"
+            }
+          ]
+        }
+      },
+      "InternalServerError": {
+        "value": {
+          "personio_trace_id": "aswo3f-a202lfso-312123sld-1230ddd",
+          "timestamp": "2021-05-28T11:17:30+00:00",
+          "errors": [
+            {
+              "title": "Internal Server Error",
+              "detail": "There was a problem while processing this request. Please try again later.",
+              "type": "https://developer.personio.de/reference/errors#common.internal_server_error"
+            }
+          ]
+        }
+      },
+      "BadGateway": {
+        "value": {
+          "personio_trace_id": "aswo3f-a202lfso-312123sld-1230ddd",
+          "timestamp": "2021-05-28T11:17:30+00:00",
+          "errors": [
+            {
+              "title": "Bad Gateway",
+              "detail": "There was a problem while processing this request. Please try again later.",
+              "type": "https://developer.personio.de/reference/errors#common.bad_gateway"
+            }
+          ]
+        }
+      },
+      "ServiceUnavailable": {
+        "value": {
+          "personio_trace_id": "aswo3f-a202lfso-312123sld-1230ddd",
+          "timestamp": "2021-05-28T11:17:30+00:00",
+          "errors": [
+            {
+              "title": "Service Unavailable",
+              "detail": "The server is temporarily unavailable. Please try again later.",
+              "type": "https://developer.personio.de/reference/errors#common.service_unavailable"
+            }
+          ]
+        }
+      },
+      "GatewayTimeout": {
+        "value": {
+          "personio_trace_id": "aswo3f-a202lfso-312123sld-1230ddd",
+          "timestamp": "2021-05-28T11:17:30+00:00",
+          "errors": [
+            {
+              "title": "Gateway Timeout",
+              "detail": "There was a problem while processing this request. Please try again later.",
+              "type": "https://developer.personio.de/reference/errors#common.gateway_timeout"
+            }
+          ]
+        }
       }
     }
   }
