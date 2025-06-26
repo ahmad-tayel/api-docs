@@ -1459,9 +1459,14 @@ paths:
                   success:
                     type: boolean
                     example: false
-                  message:
-                    type: string
-                    example: "Project 5 not found"
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                        example: "Project 5 not found"
 
     patch:
       security:
@@ -1520,6 +1525,10 @@ paths:
                         items:
                           type: string
                           example: "Active field needs to be of type boolean"
+                      name:
+                        type: string
+                        description: This field would be included only if the new name is already used by another project
+                        example: "Project name already exists"
         "404":
           description: Project not found
           content:
